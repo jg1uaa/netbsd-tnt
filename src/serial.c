@@ -2397,6 +2397,15 @@ int len;
 #ifdef HOSTDEBUG
     debug_copy_rx(buffer,len);
 #endif
+
+// Add debugging code to check buffer and length before calling block_decoder
+printf("Received buffer: ");
+for (int i = 0; i < len; i++) {
+    printf("%02x ", buffer[i]);
+}
+printf("\nLength of data: %d\n", len);
+
+// Continue with the rest of the processing...
     block_ava = block_receiver(rxbuffer,len,buffer);
     if (block_ava == -1) return(1);
     if (block_ava == 1) {

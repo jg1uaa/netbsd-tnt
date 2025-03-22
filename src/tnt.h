@@ -371,7 +371,7 @@ struct com_list {
 };
 
 struct tx_file {
-  char name[160];
+  char name[512];
   int type;
   FILE *fp;
   int fd;

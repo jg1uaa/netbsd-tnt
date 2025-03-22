@@ -125,7 +125,7 @@ struct boxline_result {
   char date[9];
   char time[6];
   char bid[13];
-  char mbx[7];
+  char mbx[MAXCOLS+1];
   int bytes;
   int lt;
   char title[MAXCOLS+1];

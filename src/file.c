@@ -10,6 +10,7 @@
 */
 
 #include "tnt.h"
+#define MAX_FILENAME_LENGTH 255  // Define this if it's not already
 #ifndef DPBOXT
 #include "xmon.h"
 #endif
@@ -836,8 +837,9 @@ char *str;
 #else
   if(strchr(file_str,'/') != NULL) {
 #endif
-    strcpy(rx_file_xmon[screen].name,file_str);
-  }
+    strncpy(rx_file_xmon[screen].name, file_str, MAX_FILENAME_LENGTH - 1);
+    rx_file_xmon[screen].name[MAX_FILENAME_LENGTH - 1] = '\0'; // Ensure null termination 
+       }
   else {
     strcpy(rx_file_xmon[screen].name,download_dir);
     strcat(rx_file_xmon[screen].name,file_str);
