@@ -1532,6 +1532,7 @@ char *str;
   path_num=0;
 
   /* Received a remote-request (//SEND, //SENDABIN, etc.) */
+ const char *adjusted_file_str = (file_str[0] == '/') ? file_str + 1 : file_str;
   if ((mode == M_REMOTE) && (par2 == 0)) {
     if (strchr(file_str,'/') != NULL) {
       cmd_display(mode,channel,no_perm_read_text,1);
@@ -1545,23 +1546,21 @@ char *str;
     if(file_str[0] == '/') {
       strcpy(path_str[path_num], "/");
       path_num++;
-      strcpy(file_str, file_str+1);
-    }
+     }
     else {
       strcpy(path_str[path_num],upload_dir);
       path_num++;
       strcpy(path_str[path_num],download_dir);
       path_num++;
-      strcpy(path_str[path_num],getenv("HOME"));
-      strcat(path_str[path_num], "/");
+      snprintf(path_str[path_num], sizeof(path_str[path_num]), "%s/", getenv("HOME"));
       path_num++;
     }
   }
 
   for(i=0;i<path_num;i++) { /* DH3MB: Search in several paths for the file */
-    strcpy(tx_file[channel].name, path_str[i]);
-    strcat(tx_file[channel].name, file_str);
-
+    strncpy(tx_file[channel].name, path_str[i], sizeof(tx_file[channel].name) - 1);
+    tx_file[channel].name[sizeof(tx_file[channel].name) - 1] = '\0';
+    strncat(tx_file[channel].name,adjusted_file_str, sizeof(tx_file[channel].name) - strlen(tx_file[channel].name) - 1);
     drop_priv(mode,channel,&uid,&gid);
     tx_file[channel].fd = open(tx_file[channel].name,O_RDONLY); 
     rest_priv(mode,channel,uid,gid);
